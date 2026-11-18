@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ipê Contabilidade</title>
+<meta name="description" content="Contabilidade para pequenas empresas em Ribeirão Preto – SP: MEI, Simples Nacional, Lucro Presumido, folha de pagamento e calculadoras grátis.">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: two faces of one office. The public site (hero with a live tax calendar, services, plans, tools, contact) and the office area (clients, deadlines, document checklist, calculators) behind tabs. Forest green for trust, ipê yellow for what needs attention. */
+:root{
+  --bg:#f4f5f1; --surface:#ffffff; --sunken:#eceee8; --ink:#14231e; --muted:#56635d; --line:#d9ddd5;
+  --brand:#1d4d3e; --brand-ink:#ffffff; --brand-soft:#e1ece7;
+  --ipe:#f2b705; --ipe-ink:#2b2000; --ipe-soft:#fdf1c7;
+  --good:#1d7a4a; --good-soft:#e0f1e7; --warn:#9a6200; --warn-soft:#fbeed3; --bad:#b0362b; --bad-soft:#f7e1de;
+  --shadow:0 1px 2px rgba(20,35,30,.06),0 6px 20px rgba(20,35,30,.06);
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1714; --surface:#16211d; --sunken:#1f2c27; --ink:#e3ebe7; --muted:#9aaba3; --line:#2a3833;
+    --brand:#7fc4a8; --brand-ink:#0b1914; --brand-soft:#1c3129;
+    --ipe:#f5c330; --ipe-ink:#2b2000; --ipe-soft:#3a3010;
+    --good:#6fd09a; --good-soft:#173525; --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#f08075; --bad-soft:#3b2220;
+    --shadow:0 1px 2px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1714; --surface:#16211d; --sunken:#1f2c27; --ink:#e3ebe7; --muted:#9aaba3; --line:#2a3833;
+  --brand:#7fc4a8; --brand-ink:#0b1914; --brand-soft:#1c3129;
+  --ipe:#f5c330; --ipe-ink:#2b2000; --ipe-soft:#3a3010;
+  --good:#6fd09a; --good-soft:#173525; --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#f08075; --bad-soft:#3b2220;
+  --shadow:0 1px 2px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15.5px; line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 56px;
+}
+h1,h2,h3,p{margin:0}
+h1,h2{font-family:var(--font-display); font-weight:700; letter-spacing:-.015em; text-wrap:balance}
+h3{font-size:16.5px; font-weight:600}
+button,input,select{font:inherit; color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brand); outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px; margin:0 auto}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--brand)}
+.btn{height:42px; padding:0 18px; border-radius:10px; border:1px solid var(--line); background:var(--surface); font-weight:600; font-size:14.5px; display:inline-flex; align-items:center; gap:8px; justify-content:center; text-decoration:none; color:var(--ink)}
+.btn:hover{background:var(--sunken)}
+.btn.primary{background:var(--brand); border-color:var(--brand); color:var(--brand-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.small{height:34px; padding:0 12px; font-size:13.5px; border-radius:8px}
+.btn:disabled{opacity:.5; cursor:default}
+.link{border:0; background:none; padding:0; color:var(--muted); text-decoration:underline; text-underline-offset:3px; font-size:13.5px}
+.link:hover{color:var(--ink)}
+.chip{display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:600; padding:2px 9px; border-radius:999px; background:var(--sunken); color:var(--muted); white-space:nowrap}
+.chip.mei{background:var(--ipe-soft); color:var(--ink)}
+.chip.simples{background:var(--brand-soft); color:var(--brand)}
+.chip.presumido,.chip.real{background:var(--sunken); color:var(--ink)}
+.chip.ok{background:var(--good-soft); color:var(--good)}
+.chip.late{background:var(--bad-soft); color:var(--bad)}
+.chip.soon{background:var(--warn-soft); color:var(--warn)}
+.chip.ex{background:var(--ipe-soft); color:var(--ipe-ink)}
+.note{background:var(--ipe-soft); border-radius:10px; padding:10px 14px; font-size:13.5px}
+.err{background:var(--bad-soft); border-radius:10px; padding:10px 14px; font-size:14px}
+
+/* ---------- Site ---------- */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:21px; color:var(--ink); text-decoration:none}
+.brand-mark{width:30px; height:30px; flex:none}
+.nav{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
+.nav button.navlink{border:0; background:none; padding:8px 12px; border-radius:8px; font-weight:500; color:var(--muted)}
+.nav button.navlink:hover{color:var(--ink); background:var(--sunken)}
+
+.hero{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:48px; align-items:center; padding-block:40px 64px}
+.hero-text{display:flex; flex-direction:column; gap:20px; min-width:0}
+.hero h1{font-size:clamp(36px,5.6vw,58px); line-height:1.04}
+.hero h1 .hl{background:linear-gradient(transparent 62%, var(--ipe) 62%, var(--ipe) 90%, transparent 90%); -webkit-box-decoration-break:clone; box-decoration-break:clone}
+.hero p.lead{font-size:18px; color:var(--muted); max-width:46ch}
+.hero-cta{display:flex; gap:10px; flex-wrap:wrap}
+.trust{display:flex; gap:22px; flex-wrap:wrap; font-size:13.5px; color:var(--muted)}
+.trust strong{color:var(--ink); font-size:20px; display:block; font-family:var(--font-display)}
+
+.agenda{background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:20px; display:flex; flex-direction:column; gap:12px; min-width:0}
+.agenda-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.agenda-head h3{font-family:var(--font-display); font-size:19px}
+.agenda ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column}
+.agenda li{display:grid; grid-template-columns:52px minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 0; border-top:1px solid var(--line)}
+.agenda li:first-child{border-top:0}
+.day{display:flex; flex-direction:column; align-items:center; justify-content:center; height:48px; border-radius:10px; background:var(--sunken); line-height:1}
+.day b{font-size:19px; font-variant-numeric:tabular-nums}
+.day small{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-top:3px}
+.agenda li.next .day{background:var(--ipe); color:var(--ipe-ink)}
+.agenda li.next .day small{color:var(--ipe-ink)}
+.agenda .what{min-width:0}
+.agenda .what div{font-weight:600}
+.agenda .what span{font-size:13px; color:var(--muted)}
+.agenda-foot{font-size:12.5px; color:var(--muted)}
+
+section.block{padding-block:56px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:28px}
+.block-head{display:flex; flex-direction:column; gap:8px; max-width:62ch}
+.block-head h2{font-size:clamp(28px,3.6vw,38px); line-height:1.1}
+.services{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden}
+.service{background:var(--surface); padding:22px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.service .ico{width:36px; height:36px; border-radius:10px; background:var(--brand-soft); color:var(--brand); display:grid; place-items:center}
+.service p{color:var(--muted); font-size:14.5px}
+
+.plans{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:stretch}
+.plan{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:14px; min-width:0}
+.plan.featured{border:2px solid var(--brand)}
+.plan .price{font-family:var(--font-display); font-size:34px; font-weight:700; line-height:1}
+.plan .price small{font-family:var(--font-body); font-size:14px; font-weight:500; color:var(--muted)}
+.plan ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:14.5px; flex:1}
+.plan .tag{align-self:flex-start}
+
+.steps{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; list-style:none; margin:0; padding:0; counter-reset:s}
+.steps li{display:flex; flex-direction:column; gap:8px; padding-top:16px; border-top:3px solid var(--brand); counter-increment:s}
+.steps li::before{content:"Passo " counter(s); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--brand)}
+.steps p{color:var(--muted); font-size:14.5px}
+
+.contact{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px}
+.contact-card{background:var(--brand); color:var(--brand-ink); border-radius:16px; padding:28px; display:flex; flex-direction:column; gap:16px}
+.contact-card h2{font-size:30px}
+.contact-list{display:flex; flex-direction:column; gap:10px}
+.contact-row{display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 16px; flex-wrap:wrap}
+.contact-row div{min-width:0}
+.contact-row small{display:block; font-size:12px; color:var(--muted); font-weight:600; letter-spacing:.04em; text-transform:uppercase}
+.contact-row span{font-weight:600; overflow-wrap:anywhere}
+footer.site-foot{border-top:1px solid var(--line); padding-top:22px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+
+/* ---------- Calculators ---------- */
+.calcs{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start}
+.calc{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:22px; display:flex; flex-direction:column; gap:16px; min-width:0}
+.calc-head{display:flex; flex-direction:column; gap:4px}
+.calc-head p{font-size:14px; color:var(--muted)}
+.fields{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.field.full{grid-column:1 / -1}
+.field > span{font-size:12.5px; font-weight:600; color:var(--muted)}
+.field input[type="text"],.field input[type="email"],.field input[type="tel"],.field select{height:40px; padding:0 12px; border:1px solid var(--line); border-radius:9px; background:var(--surface); width:100%; min-width:0}
+.field input:focus,.field select:focus{outline:none; border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft)}
+.field .err-text{font-size:12.5px; color:var(--bad)}
+.check{display:flex; align-items:center; gap:8px; font-size:14px; font-weight:500}
+.check input{width:18px; height:18px; accent-color:var(--brand)}
+.result{background:var(--sunken); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:10px}
+.result-main{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap}
+.result-main strong{font-family:var(--font-display); font-size:30px; line-height:1}
+.result dl{margin:0; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 16px; font-size:14px}
+.result dt{color:var(--muted)}
+.result dd{margin:0; text-align:right; font-weight:600; font-variant-numeric:tabular-nums}
+.result .hint{font-size:12.5px; color:var(--muted)}
+details.params{font-size:13px; color:var(--muted)}
+details.params summary{cursor:pointer; font-weight:600}
+details.params .fields{margin-top:10px}
+
+/* ---------- Office area ---------- */
+.app-top{display:flex; align-items:center; justify-content:space-between; gap:12px; padding-block:16px; flex-wrap:wrap; border-bottom:1px solid var(--line)}
+.app-top .brand small{font-family:var(--font-body); font-size:12px; font-weight:600; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-left:4px}
+.tabs{display:flex; gap:4px; padding-block:14px; overflow-x:auto}
+.tabs a{padding:9px 14px; border-radius:10px; font-weight:600; font-size:14.5px; color:var(--muted); text-decoration:none; white-space:nowrap}
+.tabs a:hover{background:var(--sunken); color:var(--ink)}
+.tabs a[aria-current="page"]{background:var(--brand); color:var(--brand-ink)}
+.tabs .count{font-size:11.5px; background:var(--bad); color:var(--surface); border-radius:999px; padding:1px 7px; margin-left:6px}
+.view{display:flex; flex-direction:column; gap:18px; padding-top:8px}
+.view-head{display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap}
+.view-head h2{font-size:28px}
+.stats{display:flex; gap:10px; flex-wrap:wrap}
+.stat{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 16px; min-width:130px; display:flex; flex-direction:column; gap:2px}
+.stat small{font-size:11.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+.stat b{font-size:22px; font-variant-numeric:tabular-nums}
+.stat.alert{border-color:var(--bad); background:var(--bad-soft)}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:14px; min-width:0}
+.panel-pad{padding:18px}
+.toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.toolbar select{height:38px; padding:0 10px; border:1px solid var(--line); border-radius:9px; background:var(--surface)}
+.monthnav{display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:999px; background:var(--surface); padding:2px}
+.monthnav button{width:34px; height:34px; border:0; border-radius:50%; background:none; display:grid; place-items:center}
+.monthnav button:hover{background:var(--sunken)}
+.monthnav span{min-width:150px; text-align:center; font-weight:600}
+
+.table-wrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:14.5px}
+th{text-align:left; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:12px 16px; border-bottom:1px solid var(--line); white-space:nowrap}
+td{padding:12px 16px; border-bottom:1px solid var(--line); vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td .sub{font-size:12.5px; color:var(--muted)}
+td.r,th.r{text-align:right}
+.row-actions{display:flex; gap:6px; justify-content:flex-end}
+.danger{color:var(--bad)}
+.btn.confirm{background:var(--bad-soft); border-color:var(--bad); color:var(--bad)}
+
+.form-panel{padding:20px; display:flex; flex-direction:column; gap:16px; border:2px solid var(--brand)}
+.form-panel .fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+.form-actions{display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap}
+
+.oblist{display:flex; flex-direction:column}
+.obgroup-head{display:flex; justify-content:space-between; gap:10px; padding:12px 18px 8px; font-size:12.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); border-top:1px solid var(--line); background:var(--sunken)}
+.obgroup:first-child .obgroup-head{border-top:0; border-radius:14px 14px 0 0}
+.obrow{display:grid; grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) auto; gap:14px; align-items:center; padding:11px 18px; border-top:1px solid var(--line)}
+.obrow .name{font-weight:600}
+.obrow .sub{font-size:12.5px; color:var(--muted)}
+.tick{width:24px; height:24px; border-radius:7px; border:2px solid var(--line); background:var(--surface); display:grid; place-items:center; padding:0}
+.tick[aria-pressed="true"]{background:var(--good); border-color:var(--good); color:var(--surface)}
+.obrow.done .name{text-decoration:line-through; color:var(--muted)}
+
+.doccards{display:flex; flex-direction:column; gap:10px}
+.doccard{background:var(--surface); border:1px solid var(--line); border-radius:14px}
+.doccard-head{display:grid; grid-template-columns:minmax(0,1fr) 160px auto; gap:16px; align-items:center; padding:14px 18px}
+.doccard-head .who{min-width:0}
+.doccard-head .who div{font-weight:600}
+.progress{display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--muted)}
+.bar{height:8px; border-radius:4px; background:var(--sunken); overflow:hidden}
+.bar i{display:block; height:100%; background:var(--brand); border-radius:4px}
+.bar.full i{background:var(--good)}
+.doccard-body{border-top:1px solid var(--line); padding:14px 18px; display:flex; flex-direction:column; gap:12px}
+.doclist{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 20px}
+.doclist label{display:flex; gap:10px; align-items:center; font-size:14.5px}
+.doclist input{width:18px; height:18px; accent-color:var(--good); flex:none}
+
+.empty{padding:36px 20px; text-align:left; display:flex; flex-direction:column; gap:10px; align-items:flex-start; color:var(--muted)}
+.empty strong{color:var(--ink); font-size:16px}
+.locked{max-width:560px; margin:40px auto; text-align:left; display:flex; flex-direction:column; gap:12px}
+.skeleton{height:14px; border-radius:6px; background:var(--sunken); margin:16px 18px}
+
+.toast{position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%) translateY(20px); opacity:0; background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:14px; font-weight:500; pointer-events:none; transition:opacity .2s, transform .2s; max-width:calc(100% - 32px); z-index:20}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr); gap:32px; padding-block:24px 48px}
+  .services,.plans,.steps,.calcs,.contact{grid-template-columns:minmax(0,1fr)}
+  .form-panel .fields{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .nav button.navlink{display:none}
+  .fields,.form-panel .fields{grid-template-columns:minmax(0,1fr)}
+  .obrow{grid-template-columns:28px minmax(0,1fr) auto}
+  .obrow .client{grid-column:2 / 3}
+  .obrow .status{grid-column:3; grid-row:1}
+  .doccard-head{grid-template-columns:minmax(0,1fr) auto}
+  .doccard-head .progress{grid-column:1 / -1; grid-row:2}
+  .doclist{grid-template-columns:minmax(0,1fr)}
+  .monthnav span{min-width:120px}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="var(--brand)"/><circle cx="12" cy="12" r="4.2" fill="var(--ipe)"/><circle cx="20.5" cy="10.5" r="3.4" fill="var(--ipe)"/><circle cx="19" cy="18.5" r="3.8" fill="var(--ipe)"/><path d="M15 29V19M15 21l-4-3" stroke="var(--brand-ink)" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+</svg>
+
+<!-- ======================= SITE ======================= -->
+<div id="site" class="wrap">
+  <header class="topbar">
+    <a class="brand" href="#inicio"><svg class="brand-mark"><use href="#logo"/></svg>Ipê Contabilidade</a>
+    <nav class="nav" aria-label="Seções">
+      <button type="button" class="navlink" data-go="servicos">Serviços</button>
+      <button type="button" class="navlink" data-go="planos">Planos</button>
+      <button type="button" class="navlink" data-go="ferramentas">Calculadoras</button>
+      <button type="button" class="navlink" data-go="contato">Contato</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <span class="eyebrow">Contabilidade para pequenas empresas · Ribeirão Preto – SP</span>
+      <h1>Seus impostos em dia, <span class="hl">sem susto no fim do mês.</span></h1>
+      <p class="lead">Cuidamos do MEI à empresa do Lucro Presumido: abertura, impostos, folha de pagamento e declarações. Você recebe as guias no WhatsApp e foca no seu negócio.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn primary" data-go="contato">Falar com um contador</button>
+        <button type="button" class="btn" data-go="ferramentas">Simular meu imposto</button>
+      </div>
+      <div class="trust">
+        <div><strong>MEI, Simples e Presumido</strong>todos os regimes</div>
+        <div><strong>Guias até o dia 10</strong>antes de cada vencimento</div>
+      </div>
+    </div>
+    <aside class="agenda" aria-labelledby="agenda-title">
+      <div class="agenda-head">
+        <h3 id="agenda-title">Prazos de <span id="agenda-mes"></span></h3>
+        <span class="chip simples">empresa do Simples com funcionários</span>
+      </div>
+      <ul id="agenda-list"></ul>
+      <p class="agenda-foot">A gente acompanha cada data por você. Prazos ajustados para fins de semana; feriados podem mudar o dia.</p>
+    </aside>
+  </section>
+
+  <section class="block" id="servicos" aria-labelledby="t-serv">
+    <div class="block-head">
+      <span class="eyebrow">Serviços</span>
+      <h2 id="t-serv">Tudo o que sua empresa precisa, num lugar só</h2>
+    </div>
+    <div class="services">
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span><h3>Abertura de empresa</h3><p>CNPJ, inscrições, alvará e a escolha do regime que paga menos imposto para o seu caso.</p></div>
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><h3>MEI</h3><p>DAS mensal, declaração anual e ajuda na hora de crescer e virar microempresa.</p></div>
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span><h3>Simples Nacional</h3><p>Apuração mensal, fator R, DEFIS e acompanhamento do limite de faturamento.</p></div>
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c.8-3.2 3.2-5 6-5s5.2 1.8 6 5M15 15.5c2.6-.3 4.8 1.2 5.6 4.5"/></svg></span><h3>Folha de pagamento</h3><p>Admissões, férias, rescisões, eSocial, FGTS Digital e pró-labore dos sócios.</p></div>
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3>Lucro Presumido</h3><p>PIS, COFINS, IRPJ e CSLL, EFD-Contribuições, ECD e ECF com prazos controlados.</p></div>
+      <div class="service"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Regularização e IR</h3><p>Empresas com pendências na Receita e declaração de Imposto de Renda dos sócios.</p></div>
+    </div>
+  </section>
+
+  <section class="block" id="planos" aria-labelledby="t-plan">
+    <div class="block-head">
+      <span class="eyebrow">Planos mensais</span>
+      <h2 id="t-plan">Honorário fixo, sem surpresa</h2>
+      <p class="muted">Valores de referência. O preço final depende do volume de notas e do número de funcionários.</p>
+    </div>
+    <div class="plans">
+      <div class="plan"><h3>MEI</h3><div class="price num">R$ 120<small>/mês</small></div><ul><li>DAS todo mês no WhatsApp</li><li>Declaração anual (DASN-SIMEI)</li><li>Emissão de nota fiscal orientada</li></ul><button type="button" class="btn" data-go="contato">Quero esse</button></div>
+      <div class="plan featured"><span class="chip simples tag">mais escolhido</span><h3>Simples Nacional</h3><div class="price num">R$ 450<small>/mês</small></div><ul><li>Apuração do DAS e fator R</li><li>Pró-labore e até 3 funcionários</li><li>DEFIS e relatórios mensais</li></ul><button type="button" class="btn primary" data-go="contato">Quero esse</button></div>
+      <div class="plan"><h3>Lucro Presumido</h3><div class="price num">R$ 980<small>/mês</small></div><ul><li>PIS, COFINS, IRPJ e CSLL</li><li>EFD-Contribuições, ECD e ECF</li><li>Reunião trimestral de resultados</li></ul><button type="button" class="btn" data-go="contato">Quero esse</button></div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="t-como">
+    <div class="block-head">
+      <span class="eyebrow">Como começar</span>
+      <h2 id="t-como">Trocar de contador leva poucos dias</h2>
+    </div>
+    <ol class="steps">
+      <li><h3>Conversa inicial</h3><p>Entendemos o seu negócio e indicamos o regime e o plano certos.</p></li>
+      <li><h3>Transferência</h3><p>Pedimos os documentos ao contador anterior e conferimos se há pendências.</p></li>
+      <li><h3>Rotina mensal</h3><p>Você envia as notas e extratos, e nós devolvemos as guias antes do vencimento.</p></li>
+    </ol>
+  </section>
+
+  <section class="block" id="ferramentas" aria-labelledby="t-calc">
+    <div class="block-head">
+      <span class="eyebrow">Calculadoras grátis</span>
+      <h2 id="t-calc">Faça as contas antes de decidir</h2>
+      <p class="muted">Estimativas para você ter uma ideia. Para o valor exato, fale com a gente.</p>
+    </div>
+    <div id="calc-home-site"></div>
+  </section>
+
+  <section class="block" id="contato" aria-labelledby="t-cont">
+    <div class="contact">
+      <div class="contact-card">
+        <span class="eyebrow" style="color:inherit; opacity:.8">Contato</span>
+        <h2 id="t-cont">Vamos conversar sobre a sua empresa?</h2>
+        <p>Atendimento de segunda a sexta, das 8h às 18h. A primeira conversa não tem custo.</p>
+      </div>
+      <div class="contact-list">
+        <div class="contact-row"><div><small>WhatsApp</small><span>(16) 0000-0000</span></div><button type="button" class="btn small" data-copy="(16) 0000-0000">Copiar</button></div>
+        <div class="contact-row"><div><small>E-mail</small><span>contato@ipecontabil.exemplo</span></div><button type="button" class="btn small" data-copy="contato@ipecontabil.exemplo">Copiar</button></div>
+        <div class="contact-row"><div><small>Endereço</small><span>Rua Exemplo, 100, Centro, Ribeirão Preto – SP</span></div></div>
+        <div class="contact-row"><div><small>Registro</small><span>CRC-SP 000000/O-0</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-foot">
+    <span>© 2026 Ipê Contabilidade</span>
+    <span>Escritório, endereço e contatos fictícios, criados como exemplo.</span>
+  </footer>
+</div>
+
+<!-- Calculadoras: um bloco só, montado no site ou na área do escritório -->
+<div class="calcs" id="calcs">
+  <form class="calc" id="calc-simples" novalidate>
+    <div class="calc-head"><h3>Imposto do Simples Nacional</h3><p>Descubra a alíquota efetiva e o valor estimado do DAS do mês.</p></div>
+    <div class="fields">
+      <label class="field full"><span>Tipo de atividade (anexo)</span>
+        <select id="s-anexo">
+          <option value="I">Anexo I · Comércio</option>
+          <option value="II">Anexo II · Indústria</option>
+          <option value="III" selected>Anexo III · Serviços (ex.: manutenção, academias, agências)</option>
+          <option value="IV">Anexo IV · Serviços (ex.: obras, limpeza, advocacia)</option>
+          <option value="V">Anexo V · Serviços (ex.: tecnologia, engenharia, publicidade)</option>
+        </select>
+      </label>
+      <label class="field"><span>Faturamento dos últimos 12 meses</span><input type="text" id="s-rbt12" inputmode="decimal" value="360.000,00" autocomplete="off"></label>
+      <label class="field"><span>Faturamento deste mês</span><input type="text" id="s-mes" inputmode="decimal" value="30.000,00" autocomplete="off"></label>
+      <label class="field full" id="s-folha-wrap" hidden><span>Folha de pagamento dos últimos 12 meses (com pró-labore)</span><input type="text" id="s-folha" inputmode="decimal" placeholder="0,00" autocomplete="off"></label>
+    </div>
+    <div class="result" id="s-result" aria-live="polite"></div>
+  </form>
+
+  <form class="calc" id="calc-pro" novalidate>
+    <div class="calc-head"><h3>Pró-labore do sócio</h3><p>Quanto o sócio recebe líquido e quanto custa para a empresa.</p></div>
+    <div class="fields">
+      <label class="field"><span>Valor bruto do pró-labore</span><input type="text" id="p-valor" inputmode="decimal" value="5.000,00" autocomplete="off"></label>
+      <label class="field"><span>Regime da empresa</span>
+        <select id="p-regime">
+          <option value="simples">Simples (anexos I, II, III ou V)</option>
+          <option value="anexo4">Simples, anexo IV</option>
+          <option value="presumido">Lucro Presumido ou Real</option>
+        </select>
+      </label>
+    </div>
+    <div class="result" id="p-result" aria-live="polite"></div>
+    <details class="params">
+      <summary>Valores usados no cálculo</summary>
+      <div class="fields">
+        <label class="field"><span>Teto do INSS (R$)</span><input type="text" id="p-teto" inputmode="decimal" value="8.157,41" autocomplete="off"></label>
+        <label class="field"><span>Desconto simplificado do IR (R$)</span><input type="text" id="p-simpl" inputmode="decimal" value="607,20" autocomplete="off"></label>
+      </div>
+      <p style="margin-top:8px">INSS do sócio: 11% até o teto. IR: tabela mensal com a redução válida desde janeiro de 2026 (isenção até R$ 5.000 e desconto gradual até R$ 7.350). Atualize o teto do INSS quando mudar.</p>
+    </details>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  /* ================= utilidades ================= */
+  const $ = id => document.getElementById(id);
+  function h(tag, props, ...kids){
+    const el = document.createElement(tag);
+    if (props) for (const [k,v] of Object.entries(props)){
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') el.style.cssText = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const c of kids.flat()){ if (c == null || c === false) continue; el.append(c.nodeType ? c : document.createTextNode(String(c))); }
+    return el;
+  }
+  const brl = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'});
+  const money = v => brl.format(v);
+  const pct = v => (v*100).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) + '%';
+  function parseNum(raw){
+    let s = String(raw || '').replace(/R\$|\s/g, '');
+    if (!s) return NaN;
+    if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+    if (!/^\d+(\.\d+)?$/.test(s)) return NaN;
+    return Number(s);
+  }
+  const pad = n => String(n).padStart(2, '0');
+  const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const ymOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+  const parseISO = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  function monthName(ym, year){ const [y,m] = ym.split('-').map(Number); return new Date(y, m-1, 1).toLocaleDateString('pt-BR', year ? {month:'long', year:'numeric'} : {month:'long'}); }
+  function shiftYm(ym, d){ const [y,m] = ym.split('-').map(Number); return ymOf(new Date(y, m-1+d, 1)); }
+  let toastT;
+  function toast(t){ const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2200); }
+  async function copy(text, btn){
+    try { await navigator.clipboard.writeText(text); toast('Copiado'); }
+    catch(e){ toast('Não deu para copiar. Selecione o texto e copie manualmente.'); }
+  }
+
+  /* ================= datas e obrigações ================= */
+  const weekend = d => d.getDay() === 0 || d.getDay() === 6;
+  function adjust(d, dir){ const x = new Date(d); while (weekend(x)) x.setDate(x.getDate() + (dir === 'next' ? 1 : -1)); return x; }
+  function nthBusinessDay(y, m, n){ const d = new Date(y, m-1, 1); let c = 0; while (true){ if (!weekend(d) && ++c === n) return d; d.setDate(d.getDate()+1); } }
+  function lastBusinessDay(y, m){ return adjust(new Date(y, m, 0), 'prev'); }
+  function obrigacoes(c, ym){
+    const [y,m] = ym.split('-').map(Number);
+    const dim = new Date(y, m, 0).getDate();
+    const day = (n, dir) => iso(adjust(new Date(y, m-1, Math.min(n, dim)), dir));
+    const out = [];
+    if (c.regime === 'MEI'){
+      out.push({id:'das-mei', nome:'DAS-MEI', data:day(20,'next'), det:'Guia mensal do MEI'});
+      if (m === 5) out.push({id:'dasn-simei', nome:'DASN-SIMEI', data:day(31,'prev'), det:'Declaração anual do MEI'});
+    }
+    if (c.regime === 'Simples'){
+      out.push({id:'das', nome:'DAS', data:day(20,'next'), det:'Apuração no PGDAS-D e guia do Simples'});
+      if (m === 3) out.push({id:'defis', nome:'DEFIS', data:day(31,'prev'), det:'Declaração anual do Simples'});
+    }
+    if (c.regime === 'Presumido' || c.regime === 'Real'){
+      out.push({id:'efd-contrib', nome:'EFD-Contribuições', data:iso(nthBusinessDay(y,m,10)), det:'Escrituração de PIS e COFINS'});
+      out.push({id:'pis-cofins', nome:'PIS e COFINS', data:day(25,'prev'), det:'DARF mensal'});
+      if ([1,4,7,10].includes(m)) out.push({id:'irpj-csll', nome:'IRPJ e CSLL', data:iso(lastBusinessDay(y,m)), det:'DARF do trimestre anterior'});
+      if (m === 6) out.push({id:'ecd', nome:'ECD', data:iso(lastBusinessDay(y,m)), det:'Escrituração contábil digital do ano anterior'});
+      if (m === 7) out.push({id:'ecf', nome:'ECF', data:iso(lastBusinessDay(y,m)), det:'Escrituração contábil fiscal do ano anterior'});
+    }
+    if (c.funcionarios){
+      out.push({id:'salarios', nome:'Pagamento de salários', data:iso(nthBusinessDay(y,m,5)), det:'Até o 5º dia útil'});
+      out.push({id:'esocial', nome:'eSocial e DCTFWeb', data:day(15,'prev'), det:'Envio da folha e declaração do INSS'});
+      out.push({id:'fgts', nome:'FGTS Digital', data:day(20,'prev'), det:'Guia do FGTS da folha'});
+      out.push({id:'darf-inss', nome:'DARF do INSS', data:day(20,'prev'), det:'Contribuições da folha (DCTFWeb)'});
+    }
+    return out.sort((a,b) => a.data.localeCompare(b.data));
+  }
+  function documentos(c){
+    const it = [['extratos','Extratos bancários do mês'], ['nf-saida','Notas fiscais emitidas']];
+    if (c.regime === 'MEI') it.push(['faturamento','Total faturado no mês']);
+    else it.push(['nf-entrada','Notas de compras e despesas']);
+    if (c.funcionarios) it.push(['ponto','Ponto, horas extras e faltas'], ['mov-pessoal','Admissões, férias e demissões']);
+    if (c.regime === 'Presumido' || c.regime === 'Real') it.push(['guias','Comprovantes de impostos pagos'], ['contratos','Contratos e empréstimos novos']);
+    return it;
+  }
+
+  /* ================= agenda do site ================= */
+  (function agendaSite(){
+    const ym = ymOf(new Date());
+    $('agenda-mes').textContent = monthName(ym);
+    const today = iso(new Date());
+    const list = obrigacoes({regime:'Simples', funcionarios:true}, ym).filter(o => o.id !== 'darf-inss');
+    const nextIdx = list.findIndex(o => o.data >= today);
+    $('agenda-list').replaceChildren(...list.map((o, i) => {
+      const d = parseISO(o.data);
+      return h('li', {class: i === nextIdx ? 'next' : ''},
+        h('div', {class:'day'}, h('b', {text: pad(d.getDate())}), h('small', {text: d.toLocaleDateString('pt-BR', {weekday:'short'}).replace('.', '')})),
+        h('div', {class:'what'}, h('div', {text:o.nome}), h('span', {text:o.det})),
+        i === nextIdx ? h('span', {class:'chip soon', text:'próximo'}) : (o.data < today ? h('span', {class:'chip ok', text:'feito'}) : null));
+    }));
+  })();
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => {
+    const el = $(b.dataset.go); if (el) el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  }));
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copy(b.dataset.copy, b)));
+
+  /* ================= calculadora Simples ================= */
+  const ANEXOS = {
+    I:  [[180000,.04,0],[360000,.073,5940],[720000,.095,13860],[1800000,.107,22500],[3600000,.143,87300],[4800000,.19,378000]],
+    II: [[180000,.045,0],[360000,.078,5940],[720000,.10,13860],[1800000,.112,22500],[3600000,.147,85500],[4800000,.30,720000]],
+    III:[[180000,.06,0],[360000,.112,9360],[720000,.135,17640],[1800000,.16,35640],[3600000,.21,125640],[4800000,.33,648000]],
+    IV: [[180000,.045,0],[360000,.09,8100],[720000,.102,12420],[1800000,.14,39780],[3600000,.22,183780],[4800000,.33,828000]],
+    V:  [[180000,.155,0],[360000,.18,4500],[720000,.195,9900],[1800000,.205,17100],[3600000,.23,62100],[4800000,.305,540000]]
+  };
+  function calcSimples(){
+    let anexo = $('s-anexo').value;
+    $('s-folha-wrap').hidden = anexo !== 'V';
+    const rbt = parseNum($('s-rbt12').value), mes = parseNum($('s-mes').value);
+    const out = $('s-result');
+    if (!(rbt >= 0) || !(mes >= 0)){ out.replaceChildren(h('p', {class:'hint', text:'Preencha os dois faturamentos em reais, por exemplo 360.000,00.'})); return; }
+    if (rbt > 4800000){ out.replaceChildren(h('p', {text:'Com faturamento acima de R$ 4,8 milhões em 12 meses, a empresa não pode ficar no Simples Nacional. Fale com a gente sobre o Lucro Presumido.'})); return; }
+    let fatorR = null, mudou = false;
+    if (anexo === 'V'){
+      const folha = parseNum($('s-folha').value);
+      if (folha > 0 && rbt > 0){ fatorR = folha / rbt; if (fatorR >= .28){ anexo = 'III'; mudou = true; } }
+    }
+    const tab = ANEXOS[anexo];
+    const fx = tab.findIndex(f => rbt <= f[0]);
+    const [, nom, ded] = tab[fx];
+    const efetiva = rbt > 0 ? Math.max(0, (rbt*nom - ded) / rbt) : nom;
+    const das = mes * efetiva;
+    out.replaceChildren(
+      h('div', {class:'result-main'}, h('span', {class:'muted', text:'DAS estimado do mês'}), h('strong', {class:'num', text: money(das)})),
+      h('dl', null,
+        h('dt', {text:'Alíquota efetiva'}), h('dd', {text: pct(efetiva)}),
+        h('dt', {text:'Alíquota nominal'}), h('dd', {text: pct(nom)}),
+        h('dt', {text:'Faixa'}), h('dd', {text: `${fx+1}ª faixa do anexo ${anexo}`}),
+        fatorR != null ? [h('dt', {text:'Fator R'}), h('dd', {text: pct(fatorR)})] : null),
+      mudou ? h('p', {class:'hint', text:'Como a folha passou de 28% do faturamento (fator R), a atividade é tributada pelo anexo III, que costuma ser mais barato.'}) : null,
+      anexo === 'V' && fatorR == null ? h('p', {class:'hint', text:'Informe a folha de 12 meses: se ela passar de 28% do faturamento, a empresa pode pagar pelo anexo III.'}) : null,
+      rbt > 3600000 ? h('p', {class:'hint', text:'Acima de R$ 3,6 milhões, ICMS e ISS passam a ser pagos fora do DAS. O valor real será diferente.'}) : null,
+      rbt === 0 ? h('p', {class:'hint', text:'Empresa em início de atividade: usamos a alíquota da 1ª faixa.'}) : null
+    );
+  }
+  ['s-anexo','s-rbt12','s-mes','s-folha'].forEach(id => $(id).addEventListener('input', calcSimples));
+  $('s-anexo').addEventListener('change', calcSimples);
+
+  /* ================= calculadora pró-labore ================= */
+  const IR = [[2428.80,0,0],[2826.65,.075,182.16],[3751.05,.15,394.16],[4664.68,.225,675.49],[Infinity,.275,908.73]];
+  function calcPro(){
+    const v = parseNum($('p-valor').value), teto = parseNum($('p-teto').value), simpl = parseNum($('p-simpl').value);
+    const out = $('p-result');
+    if (!(v > 0) || !(teto > 0) || !(simpl >= 0)){ out.replaceChildren(h('p', {class:'hint', text:'Digite o valor do pró-labore em reais, por exemplo 5.000,00.'})); return; }
+    const inss = Math.min(v, teto) * .11;
+    const base = Math.max(0, v - Math.max(inss, simpl));
+    const f = IR.find(r => base <= r[0]);
+    let ir = Math.max(0, base * f[1] - f[2]);
+    let reducao = 0;
+    if (v <= 5000) reducao = Math.min(ir, 312.89);
+    else if (v <= 7350) reducao = Math.min(ir, Math.max(0, 978.62 - 0.133145 * v));
+    ir = Math.max(0, ir - reducao);
+    const liquido = v - inss - ir;
+    const regime = $('p-regime').value;
+    const patronal = regime === 'simples' ? 0 : v * .20;
+    out.replaceChildren(
+      h('div', {class:'result-main'}, h('span', {class:'muted', text:'Sócio recebe líquido'}), h('strong', {class:'num', text: money(liquido)})),
+      h('dl', null,
+        h('dt', {text:'INSS do sócio (11%)'}), h('dd', {text: '− ' + money(inss)}),
+        h('dt', {text:'Imposto de Renda'}), h('dd', {text: ir > 0 ? '− ' + money(ir) : 'isento'}),
+        h('dt', {text:'INSS da empresa (20%)'}), h('dd', {text: patronal ? money(patronal) : 'incluso no DAS'}),
+        h('dt', {text:'Custo total para a empresa'}), h('dd', {text: money(v + patronal)})),
+      reducao > 0 && ir === 0 ? h('p', {class:'hint', text:'Pela regra de 2026, quem recebe até R$ 5.000 por mês fica isento de IR.'}) : null
+    );
+  }
+  ['p-valor','p-teto','p-simpl'].forEach(id => $(id).addEventListener('input', calcPro));
+  $('p-regime').addEventListener('change', calcPro);
+  document.querySelectorAll('.calc').forEach(f => f.addEventListener('submit', e => e.preventDefault()));
+  calcSimples(); calcPro();
+
+  /* ================= início ================= */
+  $('calc-home-site').append($('calcs'));
+})();
+</script>
+</body>
+</html>
